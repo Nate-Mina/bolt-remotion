@@ -1,0 +1,36 @@
+Arguments: 
+  /usr/local/bin/node /usr/local/bin/yarn
+
+PATH: 
+  /bin:/usr/bin:/usr/local/bin
+
+Yarn version: 
+  1.22.19
+
+Node version: 
+  18.20.3
+
+Platform: 
+  linux x64
+
+Trace: 
+  Error: socket hang up
+      at connResetException (https://boltremotion-pi31-yt8abh0e.w-credentialless-staticblitz.com/builtins.ddb8d84d.js:101:9365)
+      at TLSSocket.socketOnEnd (https://boltremotion-pi31-yt8abh0e.w-credentialless-staticblitz.com/builtins.ddb8d84d.js:3:5895)
+      at TLSSocket.emit (https://boltremotion-pi31-yt8abh0e.w-credentialless-staticblitz.com/builtins.ddb8d84d.js:30:11015)
+      at endReadableNT (https://boltremotion-pi31-yt8abh0e.w-credentialless-staticblitz.com/builtins.ddb8d84d.js:225:8116)
+      at processTicksAndRejections (https://boltremotion-pi31-yt8abh0e.w-credentialless-staticblitz.com/builtins.ddb8d84d.js:192:1067)
+      at https://boltremotion-pi31-yt8abh0e.w-credentialless-staticblitz.com/blitz.f565b097.js:40:198063
+      at _0x7bfab (https://boltremotion-pi31-yt8abh0e.w-credentialless-staticblitz.com/blitz.f565b097.js:40:198143)
+      at _0x22a44b (https://boltremotion-pi31-yt8abh0e.w-credentialless-staticblitz.com/blitz.f565b097.js:40:509537)
+      at https://boltremotion-pi31-yt8abh0e.w-credentialless-staticblitz.com/blitz.f565b097.js:40:509282
+      at Array.forEach (<anonymous>)
+
+npm manifest: 
+  {"name":"template-helloworld","version":"1.9.0","description":"My Remotion video","scripts":{"start":"remotion studio","build":"remotion render HelloWorld out/video.mp4","upgrade":"remotion upgrade","test":"eslint src --ext ts,tsx,js,jsx && tsc"},"repository":{},"license":"UNLICENSED","dependencies":{"@remotion/cli":"^4.0.0","@remotion/zod-types":"^4.0.0","react":"18.3.1","react-dom":"18.3.1","remotion":"^4.0.0","zod":"3.22.3"},"devDependencies":{"@remotion/eslint-config":"^4.0.0","@types/react":"18.3.1","@types/web":"0.0.166","eslint":"8.56.0","prettier":"3.3.3","typescript":"5.6.2"},"private":true}
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
