@@ -7,3 +7,6 @@ import { Config } from "@remotion/cli/config";
 
 Config.setVideoImageFormat("jpeg");
 Config.setOverwriteOutput(true);
+
+// Performance optimizations
+Config.setConcurrency(4); // Increase concurrency for faster rendering

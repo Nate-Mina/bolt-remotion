@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { spring, useCurrentFrame, useVideoConfig } from "remotion";
 import { FONT_FAMILY } from "./constants";
 
@@ -25,7 +25,13 @@ export const Title: React.FC<{
   const videoConfig = useVideoConfig();
   const frame = useCurrentFrame();
 
-  const words = titleText.split(" ");
+  // Memoize word splitting to avoid recalculation
+  const words = useMemo(() => titleText.split(" "), [titleText]);
+
+  // Memoize spring configuration
+  const springConfig = useMemo(() => ({
+    damping: 200,
+  }), []);
 
   return (
     <h1 style={title}>
@@ -35,9 +41,7 @@ export const Title: React.FC<{
         const scale = spring({
           fps: videoConfig.fps,
           frame: frame - delay,
-          config: {
-            damping: 200,
-          },
+          config: springConfig,
         });
 
         return (

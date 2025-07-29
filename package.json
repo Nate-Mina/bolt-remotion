@@ -5,6 +5,7 @@
   "scripts": {
     "start": "remotion studio",
     "build": "remotion render HelloWorld out/video.mp4",
+    "build:analyze": "remotion render HelloWorld out/video.mp4 --concurrency=1 --log=verbose",
     "upgrade": "remotion upgrade",
     "test": "eslint src --ext ts,tsx,js,jsx && tsc"
   },

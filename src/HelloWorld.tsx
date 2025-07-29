@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { spring } from "remotion";
 import {
   AbsoluteFill,
@@ -9,6 +10,7 @@ import {
 import { Logo } from "./HelloWorld/Logo";
 import { Subtitle } from "./HelloWorld/Subtitle";
 import { Title } from "./HelloWorld/Title";
+import { PerformanceMonitor } from "./HelloWorld/PerformanceMonitor";
 import { z } from "zod";
 import { zColor } from "@remotion/zod-types";
 
@@ -28,38 +30,51 @@ export const HelloWorld: React.FC<z.infer<typeof myCompSchema>> = ({
   const frame = useCurrentFrame();
   const { durationInFrames, fps } = useVideoConfig();
 
+  // Memoize spring configuration
+  const springConfig = useMemo(() => ({
+    damping: 100,
+  }), []);
+
   // Animate from 0 to 1 after 25 frames
   const logoTranslationProgress = spring({
     frame: frame - 25,
     fps,
-    config: {
-      damping: 100,
-    },
+    config: springConfig,
   });
 
-  // Move the logo up by 150 pixels once the transition starts
-  const logoTranslation = interpolate(
-    logoTranslationProgress,
-    [0, 1],
-    [0, -150],
-  );
+  // Memoize the logo translation calculation
+  const logoTranslation = useMemo(() => {
+    return interpolate(
+      logoTranslationProgress,
+      [0, 1],
+      [0, -150],
+    );
+  }, [logoTranslationProgress]);
 
-  // Fade out the animation at the end
-  const opacity = interpolate(
-    frame,
-    [durationInFrames - 25, durationInFrames - 15],
-    [1, 0],
-    {
-      extrapolateLeft: "clamp",
-      extrapolateRight: "clamp",
-    },
-  );
+  // Memoize the opacity calculation
+  const opacity = useMemo(() => {
+    return interpolate(
+      frame,
+      [durationInFrames - 25, durationInFrames - 15],
+      [1, 0],
+      {
+        extrapolateLeft: "clamp",
+        extrapolateRight: "clamp",
+      },
+    );
+  }, [frame, durationInFrames]);
+
+  // Memoize the logo transform style
+  const logoTransformStyle = useMemo(() => {
+    return `translateY(${logoTranslation}px)`;
+  }, [logoTranslation]);
 
   // A <AbsoluteFill> is just a absolutely positioned <div>!
   return (
     <AbsoluteFill style={{ backgroundColor: "white" }}>
+      <PerformanceMonitor />
       <AbsoluteFill style={{ opacity }}>
-        <AbsoluteFill style={{ transform: `translateY(${logoTranslation}px)` }}>
+        <AbsoluteFill style={{ transform: logoTransformStyle }}>
           <Logo logoColor1={logoColor1} logoColor2={logoColor2} />
         </AbsoluteFill>
         {/* Sequences can shift the time for its children! */}
