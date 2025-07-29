@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo } from "react";
 import { random, useVideoConfig } from "remotion";
 
 export const Atom: React.FC<{
@@ -8,15 +8,18 @@ export const Atom: React.FC<{
 }> = ({ scale, color1, color2 }) => {
   const config = useVideoConfig();
 
-  // Each SVG ID must be unique to not conflict with each other
-  const [gradientId] = useState(() => String(random(null)));
+  // Memoize gradient ID generation
+  const gradientId = useMemo(() => String(random(null)), []);
+
+  // Memoize the scale transform
+  const scaleTransform = useMemo(() => `scale(${scale})`, [scale]);
 
   return (
     <svg
       viewBox={`0 0 ${config.width} ${config.height}`}
       style={{
         position: "absolute",
-        transform: `scale(${scale})`,
+        transform: scaleTransform,
       }}
     >
       <defs>

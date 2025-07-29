@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import {
   AbsoluteFill,
   interpolate,
@@ -22,20 +23,20 @@ export const Logo: React.FC<z.infer<typeof myCompSchema2>> = ({
   const videoConfig = useVideoConfig();
   const frame = useCurrentFrame();
 
+  // Memoize spring configurations to avoid recreating objects
+  const springConfig = useMemo(() => ({
+    damping: 100,
+    mass: 0.5,
+  }), []);
+
   const development = spring({
-    config: {
-      damping: 100,
-      mass: 0.5,
-    },
+    config: springConfig,
     fps: videoConfig.fps,
     frame,
   });
 
   const rotationDevelopment = spring({
-    config: {
-      damping: 100,
-      mass: 0.5,
-    },
+    config: springConfig,
     fps: videoConfig.fps,
     frame,
   });
@@ -48,16 +49,24 @@ export const Logo: React.FC<z.infer<typeof myCompSchema2>> = ({
     fps: videoConfig.fps,
   });
 
-  const logoRotation = interpolate(
-    frame,
-    [0, videoConfig.durationInFrames],
-    [0, 360],
-  );
+  // Memoize the logo rotation calculation
+  const logoRotation = useMemo(() => {
+    return interpolate(
+      frame,
+      [0, videoConfig.durationInFrames],
+      [0, 360],
+    );
+  }, [frame, videoConfig.durationInFrames]);
+
+  // Memoize the transform style
+  const transformStyle = useMemo(() => {
+    return `scale(${scale}) rotate(${logoRotation}deg)`;
+  }, [scale, logoRotation]);
 
   return (
     <AbsoluteFill
       style={{
-        transform: `scale(${scale}) rotate(${logoRotation}deg)`,
+        transform: transformStyle,
       }}
     >
       <Arc

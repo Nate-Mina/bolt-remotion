@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { random, useVideoConfig } from "remotion";
 
 const getCircumferenceOfArc = (rx: number, ry: number) => {
   return Math.PI * 2 * Math.sqrt((rx * rx + ry * ry) / 2);
 };
 
+// Move constants outside component to prevent recalculation
 const rx = 135;
 const ry = 300;
 const cx = 960;
@@ -21,15 +22,25 @@ export const Arc: React.FC<{
 }> = ({ progress, rotation, rotateProgress, color1, color2 }) => {
   const { width, height } = useVideoConfig();
 
-  // Each svg Id must be unique to not conflict with each other
-  const [gradientId] = useState(() => String(random(null)));
+  // Memoize gradient ID generation
+  const gradientId = useMemo(() => String(random(null)), []);
+
+  // Memoize the stroke dash offset calculation
+  const strokeDashoffset = useMemo(() => {
+    return arcLength - arcLength * progress;
+  }, [progress]);
+
+  // Memoize the rotation transform
+  const rotationTransform = useMemo(() => {
+    return `rotate(${rotation * rotateProgress}deg)`;
+  }, [rotation, rotateProgress]);
 
   return (
     <svg
       viewBox={`0 0 ${width} ${height}`}
       style={{
         position: "absolute",
-        transform: `rotate(${rotation * rotateProgress}deg)`,
+        transform: rotationTransform,
       }}
     >
       <defs>
@@ -46,7 +57,7 @@ export const Arc: React.FC<{
         fill="none"
         stroke={`url(#${gradientId})`}
         strokeDasharray={arcLength}
-        strokeDashoffset={arcLength - arcLength * progress}
+        strokeDashoffset={strokeDashoffset}
         strokeLinecap="round"
         strokeWidth={strokeWidth}
       />
